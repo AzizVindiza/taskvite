@@ -1,7 +1,8 @@
 // ProductPage.tsx
 
 import React, { useState } from 'react';
-import { useGetItemsQuery } from './api.ts'; // Импортируем запросы из нашего API
+import { useGetItemsQuery } from './api.ts';
+import {Item} from "./types.ts"; // Импортируем запросы из нашего API
 
 const ProductPage: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -35,7 +36,7 @@ const ProductPage: React.FC = () => {
             ) : (
                 <>
                     <ul>
-                        {data?.result.map((product: any, index: number) => (
+                        {data?.map((product: Item, index: number) => (
                             <li key={index}>
                                 <div>ID: {product.id}</div>
                                 <div>Name: {product.product}</div>
