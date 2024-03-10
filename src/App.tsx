@@ -1,35 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// ProductPage.tsx
 
-function App() {
-  const [count, setCount] = useState(0)
+import React, { useState } from 'react';
+import { useGetItemsQuery } from './api.ts'; // Импортируем запросы из нашего API
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+const ProductPage: React.FC = () => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState('');
+    const { data, error, isLoading } = useGetItemsQuery({ ids: [], offset: (currentPage - 1) * 50, limit: 50 });
 
-export default App
+    const handleNextPage = () => {
+        setCurrentPage((prevPage) => prevPage + 1);
+    };
+
+    const handlePrevPage = () => {
+        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    };
+
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(e.target.value);
+        setCurrentPage(1);
+    };
+
+    if (error) {
+        console.error('Error occurred:', error);
+    }
+
+    return (
+        <div>
+            <input type="text" value={searchTerm} onChange={handleSearch} placeholder="Search by name, price, or brand" />
+            {isLoading ? (
+                <div>Loading...</div>
+            ) : error ? (
+                <div>Error occurred while fetching data.</div>
+            ) : (
+                <>
+                    <ul>
+                        {data?.result.map((product: any, index: number) => (
+                            <li key={index}>
+                                <div>ID: {product.id}</div>
+                                <div>Name: {product.product}</div>
+                                <div>Price: {product.price}</div>
+                                <div>Brand: {product.brand || 'N/A'}</div>
+                            </li>
+                        ))}
+                    </ul>
+                    <button onClick={handlePrevPage} disabled={currentPage === 1}>
+                        Prev Page
+                    </button>
+                    <button onClick={handleNextPage}>Next Page</button>
+                </>
+            )}
+        </div>
+    );
+};
+
+export default ProductPage;
