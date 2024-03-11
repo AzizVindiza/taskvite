@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import {useGetIdsQuery, useGetItemsQuery} from './services/api';
-import ProductList from './ProductList';
-import LoadingIndicator from './LoadingIndicator';
-import PaginationControls from './PaginationControls';
-import {Item} from "./types.ts";
+import { useGetIdsQuery, useGetItemsQuery} from '../services/api.ts';
+import ProductList from '../Components/ProductList.tsx';
+import LoadingIndicator from '../Components/LoadingIndicator.tsx';
+import PaginationControls from '../Components/PaginationControls.tsx';
+import {Item} from "../types.ts";
 
 const ITEMS_PER_PAGE = 50;
 
